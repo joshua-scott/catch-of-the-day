@@ -20,6 +20,10 @@ class App extends React.Component {
     this.setState({ fishes: sampleFishes })
   }
 
+  componentDidMount() {
+    this.loadSampleFishes()
+  }
+
   render() {
     return (
       <div className="catch-of-the-day">
