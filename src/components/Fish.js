@@ -4,6 +4,7 @@ import { formatPrice } from '../helpers'
 class Fish extends React.Component {
   render() {
     const { image, name, price, desc, status } = this.props.details
+    const { addToOrder, index } = this.props
     return (
       <li className="menu-fish">
         <img src={image} alt={`Tasty ${name}`} />
@@ -13,7 +14,13 @@ class Fish extends React.Component {
         </h3>
         <p>{desc}</p>
         {status === 'available' ? (
-          <button>Add To Order</button>
+          <button
+            onClick={() => {
+              addToOrder(index)
+            }}
+          >
+            Add To Order
+          </button>
         ) : (
           <button disabled>Sold Out!</button>
         )}

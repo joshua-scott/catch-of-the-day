@@ -11,18 +11,24 @@ class App extends React.Component {
     order: {}
   }
 
+  componentDidMount() {
+    this.loadSampleFishes()
+  }
+
   addFish = fish => {
     const fishes = { ...this.state.fishes }
     fishes[`fish${Date.now()}`] = fish
     this.setState({ fishes })
   }
 
-  loadSampleFishes = () => {
-    this.setState({ fishes: sampleFishes })
+  addToOrder = key => {
+    const order = { ...this.state.order }
+    order[key] = order[key] + 1 || 1
+    this.setState({ order })
   }
 
-  componentDidMount() {
-    this.loadSampleFishes()
+  loadSampleFishes = () => {
+    this.setState({ fishes: sampleFishes })
   }
 
   render() {
@@ -32,7 +38,12 @@ class App extends React.Component {
           <Header tagline="Fresh Seafood Market" />
           <ul className="fishes">
             {Object.keys(this.state.fishes).map(key => (
-              <Fish details={this.state.fishes[key]} key={key} />
+              <Fish
+                key={key}
+                index={key}
+                details={this.state.fishes[key]}
+                addToOrder={this.addToOrder}
+              />
             ))}
           </ul>
         </div>
