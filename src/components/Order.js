@@ -1,28 +1,46 @@
 import React from 'react'
-import OrderItem from './OrderItem'
 import { formatPrice } from '../helpers'
 
 class Order extends React.Component {
-  render() {
-    const { order, fishes } = this.props
-    const orderIds = Object.keys(order)
-    const total = orderIds.reduce((prevTotal, key) => {
-      const fish = fishes[key]
-      const count = order[key]
-      return prevTotal + fish.price * count
+  calculateTotal = orderIds => {
+    return orderIds.reduce((prevTotal, key) => {
+      const fish = this.props.fishes[key]
+      const count = this.props.order[key]
+      const isAvailable = fish && fish.status === 'available'
+      return isAvailable ? prevTotal + count * fish.price : prevTotal
     }, 0)
+  }
+
+  renderOrder = key => {
+    const fish = this.props.fishes[key]
+    const count = this.props.order[key]
+    const isAvailable = fish && fish.status === 'available'
+
+    if (!isAvailable) {
+      return (
+        <li key={key}>
+          Sorry, {fish ? fish.name : 'fish'} is no longer available
+        </li>
+      )
+    }
+    return (
+      <li key={key}>
+        <span>
+          <span className="count">{count}</span> lbs {fish.name}
+        </span>
+        <span className="price">{formatPrice(count * fish.price)}</span>
+      </li>
+    )
+  }
+
+  render() {
+    const orderIds = Object.keys(this.props.order)
+    const total = this.calculateTotal(orderIds)
     return (
       <div className="order-wrap">
         <h2>Your Order</h2>
         <ul className="order">
-          {Object.keys(order).map(key => (
-            <OrderItem
-              key={key}
-              fishName={fishes[key].name}
-              fishPrice={fishes[key].price}
-              weightInPounds={order[key]}
-            />
-          ))}
+          {orderIds.map(key => this.renderOrder(key))}
           <li className="total">
             <strong>Total:</strong>
             {formatPrice(total)}
