@@ -14,10 +14,26 @@ class App extends React.Component {
 
   componentDidMount() {
     const { storeId } = this.props.match.params
+
+    // Load existing order data from localStorage
+    const existingOrderData = JSON.parse(localStorage.getItem(storeId))
+    if (existingOrderData) {
+      this.setState({ order: existingOrderData })
+    }
+
+    // Sync fishes with firebase
     this.ref = base.syncState(`${storeId}/fishes`, {
       context: this,
       state: 'fishes'
     })
+  }
+
+  componentDidUpdate() {
+    // Save order data to localStorage
+    localStorage.setItem(
+      this.props.match.params.storeId,
+      JSON.stringify(this.state.order)
+    )
   }
 
   componentWillUnmount() {

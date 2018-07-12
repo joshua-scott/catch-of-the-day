@@ -16,6 +16,9 @@ class Order extends React.Component {
     const count = this.props.order[key]
     const isAvailable = fish && fish.status === 'available'
 
+    // Only render the fish once it's been loaded
+    if (!fish) return null
+
     if (!isAvailable) {
       return (
         <li key={key}>
