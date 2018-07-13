@@ -65,6 +65,12 @@ class App extends React.Component {
     this.setState({ order })
   }
 
+  removeFromOrder = key => {
+    const order = { ...this.state.order }
+    delete order[key]
+    this.setState({ order })
+  }
+
   loadSampleFishes = () => {
     this.setState({ fishes: sampleFishes })
   }
@@ -86,7 +92,11 @@ class App extends React.Component {
             ))}
           </ul>
         </div>
-        <Order order={order} fishes={fishes} />
+        <Order
+          order={order}
+          fishes={fishes}
+          removeFromOrder={this.removeFromOrder}
+        />
         <Inventory
           loadSampleFishes={this.loadSampleFishes}
           addFish={this.addFish}
