@@ -52,6 +52,13 @@ class App extends React.Component {
     this.setState({ fishes })
   }
 
+  deleteFish = key => {
+    const fishes = { ...this.state.fishes }
+    // 'delete fishes[key]' doesn't work with Firebase syncing
+    fishes[key] = null
+    this.setState({ fishes })
+  }
+
   addToOrder = key => {
     const order = { ...this.state.order }
     order[key] = order[key] + 1 || 1
@@ -84,6 +91,7 @@ class App extends React.Component {
           loadSampleFishes={this.loadSampleFishes}
           addFish={this.addFish}
           updateFish={this.updateFish}
+          deleteFish={this.deleteFish}
           fishes={fishes}
         />
       </div>
