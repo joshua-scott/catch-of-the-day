@@ -3,6 +3,13 @@ import { formatPrice } from '../helpers'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 class Order extends React.Component {
+  state = {
+    transitionOptions: {
+      classNames: 'order',
+      timeout: { enter: 250, exit: 250 }
+    }
+  }
+
   calculateTotal = orderIds => {
     return orderIds.reduce((prevTotal, key) => {
       const fish = this.props.fishes[key]
@@ -16,18 +23,13 @@ class Order extends React.Component {
     const fish = this.props.fishes[key]
     const count = this.props.order[key]
     const isAvailable = fish && fish.status === 'available'
-    const transitionOptions = {
-      key,
-      classNames: 'order',
-      timeout: { enter: 250, exit: 250 }
-    }
 
     // Only render the fish once it's been loaded
     if (!fish) return null
 
     if (!isAvailable) {
       return (
-        <CSSTransition {...transitionOptions}>
+        <CSSTransition {...this.state.transitionOptions} key={key}>
           <li key={key}>
             Sorry, {fish ? fish.name : 'fish'} is no longer available
           </li>
@@ -35,7 +37,7 @@ class Order extends React.Component {
       )
     }
     return (
-      <CSSTransition {...transitionOptions}>
+      <CSSTransition {...this.state.transitionOptions} key={key}>
         <li key={key}>
           <span>
             <TransitionGroup component="span" className="count">
@@ -48,6 +50,7 @@ class Order extends React.Component {
               </CSSTransition>
             </TransitionGroup>
             lbs {fish.name}
+            {formatPrice(count * fish.price)}
             <button onClick={() => this.props.removeFromOrder(key)}>
               &times;
             </button>
@@ -66,10 +69,12 @@ class Order extends React.Component {
         <h2>Your Order</h2>
         <TransitionGroup component="ul" className="order">
           {orderIds.map(key => this.renderOrder(key))}
-          <li className="total">
-            <strong>Total:</strong>
-            {formatPrice(total)}
-          </li>
+          <CSSTransition {...this.state.transitionOptions} key={'total'}>
+            <li className="total">
+              <strong>Total:</strong>
+              {formatPrice(total)}
+            </li>
+          </CSSTransition>
         </TransitionGroup>
       </div>
     )
