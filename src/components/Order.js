@@ -12,9 +12,9 @@ class Order extends React.Component {
   }
 
   static propTypes = {
-    fishes: PropTypes.object,
-    order: PropTypes.object,
-    removeFromOrder: PropTypes.func
+    fishes: PropTypes.object.isRequired,
+    order: PropTypes.object.isRequired,
+    removeFromOrder: PropTypes.func.isRequired
   }
 
   calculateTotal = orderIds => {
@@ -57,7 +57,6 @@ class Order extends React.Component {
               </CSSTransition>
             </TransitionGroup>
             lbs {fish.name}
-            {formatPrice(count * fish.price)}
             <button onClick={() => this.props.removeFromOrder(key)}>
               &times;
             </button>
